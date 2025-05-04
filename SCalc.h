@@ -1,3 +1,5 @@
+// Автор: Игонин В.Ю.
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -208,7 +210,7 @@ public:
 	/// <summary>
 	/// Вставка числа в вершину стека
 	/// </summary>
-	/// <param name="line"></param>
+	/// <param name="line - вводимая строка"></param>
 	void PUSH(const string& line)
 	{
 		try

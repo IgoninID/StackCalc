@@ -1,6 +1,11 @@
+// Автор: Игонин В.Ю.
+
 #include "SCalc.h"
 #include <cassert>
 
+/// <summary>
+/// Тест методов калькулятора
+/// </summary>
 void test()
 {
 	Calc calc;
