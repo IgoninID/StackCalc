@@ -4,6 +4,8 @@
 
 int main()
 {
+    test();
+    system("cls");
     setlocale(LC_ALL, "rus");
     Calc calc;
     calc.WORK();

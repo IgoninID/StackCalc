@@ -5,23 +5,37 @@
 
 using namespace std;
 
+/// <summary>
+/// Класс реализующий постфиксный калькулятор на основе стека
+/// </summary>
 class Calc
 {
 private:
-	TemplateStack<double> stack;
+	TemplateStack<double> stack; // Стек для калькулятора
 public:
+
+	double top = NULL;
+
+	/// <summary>
+	/// Показ вершины стека
+	/// </summary>
 	void SHOW()
 	{
 		if (!stack.isEmpty())
 		{
 			cout << "= " << stack.top() << endl;
+			top = stack.top();
 		}
 		else
 		{
 			cout << "Стек пустой";
+			top = NULL;
 		}
 	}
 
+	/// <summary>
+	/// Сложение 2 чисел в стеке
+	/// </summary>
 	void ADD()
 	{
 		if (stack.getSize() < 2)
@@ -37,6 +51,9 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Вычитание 2 чисел в стеке
+	/// </summary>
 	void MINUS()
 	{
 		if (stack.getSize() < 2)
@@ -52,6 +69,9 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Умножение 2 чисел в стеке
+	/// </summary>
 	void MULTIPLY()
 	{
 		if (stack.getSize() < 2)
@@ -67,6 +87,9 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Деление 2 чисел в стеке
+	/// </summary>
 	void DIVISION()
 	{
 		if (stack.getSize() < 2)
@@ -87,11 +110,15 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Синус числа на вершине стека
+	/// </summary>
 	void SIN()
 	{
 		if (stack.isEmpty())
 		{
 			cout << "Стек пустой\n";
+			top = NULL;
 			return;
 		}
 		double x = stack.top();
@@ -100,11 +127,15 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Косинус числа на вершине стека
+	/// </summary>
 	void COS()
 	{
 		if (stack.isEmpty())
 		{
 			cout << "Стек пустой\n";
+			top = NULL;
 			return;
 		}
 		double x = stack.top();
@@ -113,11 +144,15 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Степень экспоненты числа на вершине стека
+	/// </summary>
 	void EXP()
 	{
 		if (stack.isEmpty())
 		{
 			cout << "Стек пустой\n";
+			top = NULL;
 			return;
 		}
 		double x = stack.top();
@@ -126,24 +161,37 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Натуральный логарифм числа на вершине стека
+	/// </summary>
 	void LOG()
 	{
 		if (stack.isEmpty())
 		{
 			cout << "Стек пустой\n";
+			top = NULL;
 			return;
 		}
 		double x = stack.top();
+		if (x < 0)
+		{
+			cout << "Отрицательное число в логарифме\n";
+			return;
+		}
 		stack.pop();
 		stack.push(log(x));
 		SHOW();
 	}
 
+	/// <summary>
+	/// Корень числа на вершине стека
+	/// </summary>
 	void SQRT()
 	{
 		if (stack.isEmpty())
 		{
 			cout << "Стек пустой\n";
+			top = NULL;
 			return;
 		}
 		double x = stack.top();
@@ -157,97 +205,130 @@ public:
 		SHOW();
 	}
 
+	/// <summary>
+	/// Вставка числа в вершину стека
+	/// </summary>
+	/// <param name="line"></param>
 	void PUSH(const string& line)
 	{
-		double x = stod(line);
-		stack.push(x);
+		try
+		{
+			double x = stod(line);
+			stack.push(x);
+			top = stack.top();
+		}
+		catch (exception e)
+		{
+
+		}
 	}
 
+	/// <summary>
+	/// Справка калькулятора
+	/// </summary>
 	void HELP()
 	{
-		cout << "Команды калькулятора:\nЧисло  вставить число в стек\n+, -, *, / Арифметические операции\nsin, cos, exp, log, sqrt Функции\n = Вывести число на вершине стека\npop Удалить число на вершине стека\nclear Очистить стек\nquit Завершить работу\n";
+		cout << "Команды калькулятора:\nЧисло  вставить число в стек\n+, -, *, / Арифметические операции\nsin, cos, exp, log, sqrt Функции\n = Вывести число на вершине стека\npop Удалить число на вершине стека\nclear Очистить стек\nquit Завершить работу\n\n";
 	}
 
+	/// <summary>
+	/// Очистка стека
+	/// </summary>
 	void CLEAR()
 	{
 		stack.clear();
+		top = NULL;
 	}
 
+	/// <summary>
+	/// Удаление вершины стека
+	/// </summary>
 	void POP()
 	{
 		stack.pop();
+		if (!stack.isEmpty())
+		{
+			top = stack.top();
+		}
+		else
+		{
+			top = NULL;
+		}
 	}
 
+	/// <summary>
+	/// Работа калькулятора
+	/// </summary>
 	void WORK()
 	{
-		HELP();
+		HELP(); // вывод справки
 		cout << "Введите выражение\n";
 		while (true)
 		{
 			string line;
 			cin >> line;
-			if (line.size() == 0)
+			if (line.size() == 0) // пользователь ничего не ввел
 			{
 				return;
 			}
 
-			if (line == "+")
+			if (line == "+") // запрос сложения
 			{
 				ADD();
 			}
-			else if (line == "-")
+			else if (line == "-") // запрос вычитания
 			{
 				MINUS();
 			}
-			else if (line == "*")
+			else if (line == "*") // запрос умножения
 			{
 				MULTIPLY();
 			}
-			else if (line == "/")
+			else if (line == "/") // запрос деления
 			{
 				DIVISION();
 			}
-			else if (line == "sin")
+			else if (line == "sin") // запрос синуса
 			{
 				SIN();
 			}
-			else if (line == "cos")
+			else if (line == "cos") // запрос косинуса
 			{
 				COS();
 			}
-			else if (line == "exp")
+			else if (line == "exp") // запрос степени экспоненты
 			{
 				EXP();
 			}
-			else if (line == "log")
+			else if (line == "log") // запрос натурального логарифма
 			{
 				LOG();
 			}
-			else if (line == "sqrt")
+			else if (line == "sqrt") // запрос корня
 			{
 				SQRT();
 			}
-			else if (line == "=")
+			else if (line == "=") // запрос ответа
 			{
 				SHOW();
 			}
-			else if (isdigit(line[0]) || (line.size() > 1 && (line[0] == '-' || line[0] == '+') && isdigit(line[1])))
+			else if (isdigit(line[0]) || (line.size() > 1 && (line[0] == '-' || line[0] == '+') && isdigit(line[1]))) // введено число
 			{
 				PUSH(line);
 			}
-			else if (line == "pop")
+			else if (line == "pop") // запрос удаления
 			{
 				POP();
 			}
-			else if (line == "clear")
+			else if (line == "clear") // запрос очистка
 			{
 				CLEAR();
 			}
-			else if (line == "quit")
+			else if (line == "quit") // запрос завершения калькулятора
 			{
 				return;
 			}
-			else
+			else // вывод справки если не подходит
 			{
 				HELP();
 			}
@@ -255,4 +336,7 @@ public:
 	}
 };
 
+/// <summary>
+/// Тест методов калькулятора
+/// </summary>
 void test();
