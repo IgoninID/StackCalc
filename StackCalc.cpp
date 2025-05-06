@@ -10,5 +10,8 @@ int main()
     system("cls");
     setlocale(LC_ALL, "rus");
     Calc calc;
-    calc.WORK();
+    string line;
+    cout << calc.HELP();
+    getline(cin, line);
+    cout << "= " << calc.WORK(line);
 }

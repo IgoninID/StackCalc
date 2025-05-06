@@ -48,8 +48,6 @@ void test()
 
 	calc.PUSH("1");
 	assert(calc.top == 1);
-	calc.PUSH("");
-	assert(calc.top == 1);
 	calc.ADD();
 	assert(calc.top == 1);
 	calc.CLEAR();
@@ -93,8 +91,6 @@ void test()
 	assert(calc.top == NULL);
 
 	calc.PUSH("-1");
-	assert(calc.top == -1);
-	calc.PUSH("");
 	assert(calc.top == -1);
 	calc.MINUS();
 	assert(calc.top == -1);
@@ -148,8 +144,6 @@ void test()
 	assert(calc.top == NULL);
 
 	calc.PUSH("-4");
-	assert(calc.top == -4);
-	calc.PUSH("");
 	assert(calc.top == -4);
 	calc.MULTIPLY();
 	assert(calc.top == -4);
@@ -213,8 +207,6 @@ void test()
 
 	calc.PUSH("2");
 	assert(calc.top == 2);
-	calc.PUSH("");
-	assert(calc.top == 2);
 	calc.DIVISION();
 	assert(calc.top == 2);
 	calc.CLEAR();
@@ -227,7 +219,6 @@ void test()
 	assert((fabs(calc.top) - 0.6536) < 0.0001);
 	calc.CLEAR();
 
-	calc.PUSH("");
 	assert(calc.top == NULL);
 	calc.COS();
 	assert(calc.top == NULL);
@@ -240,7 +231,6 @@ void test()
 	assert((fabs(calc.top) - 0.7568) < 0.0001);
 	calc.CLEAR();
 
-	calc.PUSH("");
 	assert(calc.top == NULL);
 	calc.SIN();
 	assert(calc.top == NULL);
@@ -253,7 +243,6 @@ void test()
 	assert((fabs(calc.top) - 54.5981) < 0.0001);
 	calc.CLEAR();
 
-	calc.PUSH("");
 	assert(calc.top == NULL);
 	calc.EXP();
 	assert(calc.top == NULL);
@@ -266,7 +255,6 @@ void test()
 	assert((fabs(calc.top) - 1.3862) < 0.0001);
 	calc.CLEAR();
 
-	calc.PUSH("");
 	assert(calc.top == NULL);
 	calc.LOG();
 	assert(calc.top == NULL);
@@ -285,7 +273,15 @@ void test()
 	assert(calc.top == 2);
 	calc.CLEAR();
 
-	calc.PUSH("");
+	try
+	{
+		calc.PUSH("");
+		assert(false);
+	}
+	catch (runtime_error e)
+	{
+		assert(true);
+	}
 	assert(calc.top == NULL);
 	calc.SQRT();
 	assert(calc.top == NULL);
@@ -302,16 +298,29 @@ void test()
 	assert(calc.top == -4);
 	calc.PUSH("4");
 	assert(calc.top == 4);
-	calc.SHOW();
-	assert(calc.top == 4);
 	calc.POP();
-	assert(calc.top == -4);
-	calc.SHOW();
 	assert(calc.top == -4);
 	calc.POP();
 	assert(calc.top == NULL);
-	calc.SHOW();
+
+	//тесты сложных выражений
+	calc.WORK("3 3 * 4 4 * + sqrt");
+	assert(calc.top == 5);
+	calc.CLEAR();
+	calc.WORK("-3 34 * 4 34 * -");
+	assert(calc.top == 238);
+	calc.CLEAR();
+	calc.WORK("3 34 * -4 34 * -");
+	assert(calc.top == -238);
+	calc.CLEAR();
+	try
+	{
+		calc.WORK("");
+		assert(false);
+	}
+	catch (length_error e)
+	{
+		assert(true);
+	}
 	assert(calc.top == NULL);
-
-
 }

@@ -2,6 +2,7 @@
 
 #pragma once
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "..\Stack\TStack.h"
 
@@ -19,23 +20,6 @@ public:
 	double top = NULL;
 
 	/// <summary>
-	/// Показ вершины стека
-	/// </summary>
-	void SHOW()
-	{
-		if (!stack.isEmpty())
-		{
-			cout << "= " << stack.top() << endl;
-			top = stack.top();
-		}
-		else
-		{
-			cout << "Стек пустой";
-			top = NULL;
-		}
-	}
-
-	/// <summary>
 	/// Сложение 2 чисел в стеке
 	/// </summary>
 	void ADD()
@@ -50,7 +34,7 @@ public:
 		double y = stack.top();
 		stack.pop();
 		stack.push(x + y);
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -68,7 +52,7 @@ public:
 		double y = stack.top();
 		stack.pop();
 		stack.push(x - y);
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -86,7 +70,7 @@ public:
 		double y = stack.top();
 		stack.pop();
 		stack.push(x * y);
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -109,7 +93,7 @@ public:
 		}
 		stack.pop();
 		stack.push(x / y);
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -126,7 +110,7 @@ public:
 		double x = stack.top();
 		stack.pop();
 		stack.push(sin(x));
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -143,7 +127,7 @@ public:
 		double x = stack.top();
 		stack.pop();
 		stack.push(cos(x));
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -160,7 +144,7 @@ public:
 		double x = stack.top();
 		stack.pop();
 		stack.push(exp(x));
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -182,7 +166,7 @@ public:
 		}
 		stack.pop();
 		stack.push(log(x));
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -204,7 +188,7 @@ public:
 		}
 		stack.pop();
 		stack.push(sqrt(x));
-		SHOW();
+		top = stack.top();
 	}
 
 	/// <summary>
@@ -221,16 +205,16 @@ public:
 		}
 		catch (exception e)
 		{
-
+			throw runtime_error("Невозможно преобразовать в число");
 		}
 	}
 
 	/// <summary>
 	/// Справка калькулятора
 	/// </summary>
-	void HELP()
+	string HELP()
 	{
-		cout << "Команды калькулятора:\nЧисло  вставить число в стек\n+, -, *, / Арифметические операции\nsin, cos, exp, log, sqrt Функции\n = Вывести число на вершине стека\npop Удалить число на вершине стека\nclear Очистить стек\nquit Завершить работу\n\n";
+		return "Команды калькулятора:\nЧисло  вставить число в стек\n+, -, *, / Арифметические операции\nsin, cos, exp, log, sqrt Функции\n = Вывести число на вершине стека\npop Удалить число на вершине стека\nclear Очистить стек\n\n";
 	}
 
 	/// <summary>
@@ -261,20 +245,24 @@ public:
 	/// <summary>
 	/// Работа калькулятора
 	/// </summary>
-	void WORK()
+	double WORK(const string& linefull)
 	{
-		HELP(); // вывод справки
-		cout << "Введите выражение\n";
-		while (true)
+		stringstream ss;
+		string line;
+		if (linefull.empty())
 		{
-			string line;
-			cin >> line;
-			if (line.size() == 0) // пользователь ничего не ввел
-			{
-				return;
-			}
+			throw length_error("Пустая строка");
+		}
+		ss << linefull;
+		while (!ss.eof())
+		{
+			ss >> line;
 
-			if (line == "+") // запрос сложения
+			if (isdigit(line[0]) || (line.size() > 1 && (line[0] == '-' || line[0] == '+') && isdigit(line[1]))) // введено число
+			{
+				PUSH(line);
+			}
+			else if (line == "+") // запрос сложения
 			{
 				ADD();
 			}
@@ -312,11 +300,7 @@ public:
 			}
 			else if (line == "=") // запрос ответа
 			{
-				SHOW();
-			}
-			else if (isdigit(line[0]) || (line.size() > 1 && (line[0] == '-' || line[0] == '+') && isdigit(line[1]))) // введено число
-			{
-				PUSH(line);
+				return top;
 			}
 			else if (line == "pop") // запрос удаления
 			{
@@ -326,15 +310,8 @@ public:
 			{
 				CLEAR();
 			}
-			else if (line == "quit") // запрос завершения калькулятора
-			{
-				return;
-			}
-			else // вывод справки если не подходит
-			{
-				HELP();
-			}
 		}
+		return top;
 	}
 };
 
